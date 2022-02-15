@@ -44,10 +44,10 @@ var Out_time = 20;
         Sku_num = $("[aria-describedby='Sku_Number']").val()
     // 转化单位
     function Tr_CBM_Weight(Len,Width,Height,Weight) {
-        // var CBM = (Len * Width * Height)/1000000;
+        var CBM = (Len * Width * Height)/1000000;
         // var pao = (Len * Width * Height)/Pao;
         // if (pao>Weight) {Weight = pao;}
-        Weight = Math.max((Len * Width * Height)/1000000,(Len * Width * Height)/Pao);
+        Weight = Math.max(Weight,(Len * Width * Height)/Pao);
         var LB = Weight * 0.75;
         return {
             CBM : CBM,
