@@ -34,53 +34,67 @@ var Out_truck = 12;
 var Out_time = 20;
 
 // 获取表单信息
-var Len,Width,Height,Weight,P_num,Sku_num,CM,KG;
-$("#Cal").click(function () { 
-    Len = $("[aria-describedby='Product_Len']").val()
-    Width = $("[aria-describedby='Product_Width']").val()
-    Height = $("[aria-describedby='Product_Height']").val()
-    Weight = $("[aria-describedby='Product_Weight']").val()
-    P_num = $("[aria-describedby='P_Number']").val()
-    Sku_num = $("[aria-describedby='Sku_Number']").val()
-// 转化单位
-function Tr_CBM_Weight(Len,Width,Height,Weight) {
-    var CBM = (Len * Width * Height)/1000000;
-    var pao = (Len * Width * Height)/Pao;
-    if (pao>Weight) {Weight = pao;}
-    var LB = Weight * 0.75;
-    return CBM,Weight,LB;
-}
+    var Len,Width,Height,Weight,P_num,Sku_num,CM,KG;
+    $("#Cal").click(function () { 
+        Len = $("[aria-describedby='Product_Len']").val()
+        Width = $("[aria-describedby='Product_Width']").val()
+        Height = $("[aria-describedby='Product_Height']").val()
+        Weight = $("[aria-describedby='Product_Weight']").val()
+        P_num = $("[aria-describedby='P_Number']").val()
+        Sku_num = $("[aria-describedby='Sku_Number']").val()
+    // 转化单位
+    function Tr_CBM_Weight(Len,Width,Height,Weight) {
+        // var CBM = (Len * Width * Height)/1000000;
+        // var pao = (Len * Width * Height)/Pao;
+        // if (pao>Weight) {Weight = pao;}
+        Weight = Math.max((Len * Width * Height)/1000000,(Len * Width * Height)/Pao);
+        var LB = Weight * 0.75;
+        return {
+            CBM : CBM,
+            Weight : Weight,
+            LB : LB,
+        }
+    }
 // 计算公式
-var Flag_re
-switch (LB) {
-    case LB<2:Flag_re = Re_1
-        break;
-    case LB<5:Flag_re = Re_2
-        break;
-    case LB<10:Flag_re = Re_3
-        break;
-    case LB<30:Flag_re = Re_4
-        break;
-    case LB<50:Flag_re = Re_5
-        break;
-    case LB<70:Flag_re = Re_6
-        break;
-    default:
-        alert("重量错误")
-        break;
-}
-var Flag_Box
-if((CBM * P_num) / Box_de_cbm > (Weight * P_num) / Box_de_Weight){
-    
-}
-switch (LB) {
-    case value:
-        
-        break;
+    /* 贴标费用 单位LB */
+    var PorductA = Tr_CBM_Weight(Len,Width,Height,Weight)
+    console.log(PorductA)
+    var Flag_re = null;
+    switch (PorductA.LB) {
+        case PorductA.LB<2:Flag_re = Re_1
+            break;
+        case PorductA.LB<5:Flag_re = Re_2
+            break;
+        case PorductA.LB<10:Flag_re = Re_3
+            break;
+        case PorductA.LB<30:Flag_re = Re_4
+            break;
+        case PorductA.LB<50:Flag_re = Re_5
+            break;
+        case PorductA.LB<70:Flag_re = Re_6
+            break;
+        case PorductA.LB<0:
+            alert("重量错误")
+        default:
+            alert("重量过大")
+            break;
+    }
+    console.log(Flag_re);
+    /* 预估箱子数量 */
+        var Flag_Box = null;
+        var Box_max = Math.ceil(Math.max((PorductA.CBM * P_num) / Box_de_cbm,(PorductA.Weight * P_num) / Box_de_Weight))    /* 总CBM/箱子CBM  总重量/箱子重量 */
+        /* 打包费 */
+        // switch (LB) {
+        //     case value:
+                
+        //         break;
 
-    default:
-        break;
-}
+        //     default:
+        //         break;
+        // }
+    /* 箱子费用 */
+    alert("贴标费"+(Flag_re*P_num)+"预估箱子数量"+Box_max)
+
 
 
 
